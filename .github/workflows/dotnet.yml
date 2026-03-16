@@ -1,24 +1,27 @@
-name: .NET Core CI/CD
+name: .NET Local CI/CD
 on:
   push:
     branches: [ main ]
- 
 jobs:  
-  build:
-    runs-on: ubuntu-latest
+  build-and-deploy:
+    runs-on: self-hosted
     defaults:
       run:
         working-directory: ./FirstWebApp
     steps:
-    - uses: actions/checkout@v4
-
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 10.0.103
-
-    - name: Restore dependencies
-      run: dotnet restore
-    
-    - name: Build
-      run: dotnet build --no-restore  --configuration Release
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Restore and Build
+      run: dotnet build --configuration Release
+    - name: Prepare IIS Folder
+      Shell: Powershell
+      run: |
+        $path = "C:\inetpub\wwwroot\FirstWebApp"
+        if (Test-Path $path) {
+          Remove-Item $path -Recurse -Force"$path\*"
+        }
+        else {  
+        New-Item -Path $path -ItemType Directory -Force -Path $path
+        }
+    - name: Deploy to IIS
+      run: dotnet publish -c Release -o C:\inetpub\wwwroot\FirstWebApp
