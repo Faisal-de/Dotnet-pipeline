@@ -19,11 +19,15 @@ jobs:
       shell: powershell
       run: |
         $path = "C:\inetpub\wwwroot\FirstWebApp"
-        if (Test-Path $path) {
-          Get-ChildItem -Path $path | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
-        }
-         else {  
-           New-Item -ItemType Directory -Path $path -Force
-        }
+        if (!(Test-Path $path))
+         {New-Item -ItemType Directory -Path $path -Force }
+        New-Item -Path "$path\app_offline.htm" -ItemType File -Force
+        Start-Sleep -Seconds 2
+        Get-ChildItem -Path $path -Exclude "app_offline.htm" | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+         
     - name: Deploy to IIS
       run: dotnet publish -c Release -o C:\inetpub\wwwroot\FirstWebApp
+    - name: Start Application
+      shell: powershell
+      run: |
+       Remove-Item -Path "C:\inetpub\wwwroot\FirstWebApp\app_offline.htm" -Force -ErrorAction SilentlyContinue
