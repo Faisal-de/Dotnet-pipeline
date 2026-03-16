@@ -11,17 +11,19 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+
     - name: Restore and Build
       run: dotnet build --configuration Release
+
     - name: Prepare IIS Folder
       shell: powershell
       run: |
         $path = "C:\inetpub\wwwroot\FirstWebApp"
         if (Test-Path $path) {
-          Get-Children -Path $path | Remove-Item -Recurse -Force
+          Get-ChildItem -Path $path | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
         }
-        else {  
-        New-Item -ItemType Directory -Path $path -Force
+         else {  
+           New-Item -ItemType Directory -Path $path -Force
         }
     - name: Deploy to IIS
       run: dotnet publish -c Release -o C:\inetpub\wwwroot\FirstWebApp
