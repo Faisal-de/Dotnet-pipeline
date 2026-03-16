@@ -14,7 +14,7 @@ jobs:
     - name: Restore and Build
       run: dotnet build --configuration Release
     - name: Prepare IIS Folder
-      Shell: Powershell
+      shell: powershell
       run: |
         $path = "C:\inetpub\wwwroot\FirstWebApp"
         if (Test-Path $path) {
