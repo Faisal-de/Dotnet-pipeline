@@ -1,0 +1,20 @@
+@model FirstWebApp.Models.Student
+
+<h2>Edit Student</h2>
+<form asp-action="Edit">
+    <input type="hidden" asp-for="Id" />
+    <div class="mb-3">
+        <label>Name</label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Department</label>
+        <input asp-for="Department" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Section</label>
+        <input asp-for="Section" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-success">Update Record</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
