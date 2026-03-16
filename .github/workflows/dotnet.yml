@@ -18,10 +18,10 @@ jobs:
       run: |
         $path = "C:\inetpub\wwwroot\FirstWebApp"
         if (Test-Path $path) {
-          Remove-Item $path -Recurse -Force"$path\*"
+          Get-Children -Path $path | Remove-Item -Recurse -Force
         }
         else {  
-        New-Item -Path $path -ItemType Directory -Force -Path $path
+        New-Item -ItemType Directory -Path $path -Force
         }
     - name: Deploy to IIS
       run: dotnet publish -c Release -o C:\inetpub\wwwroot\FirstWebApp
